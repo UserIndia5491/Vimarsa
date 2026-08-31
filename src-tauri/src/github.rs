@@ -8,6 +8,7 @@ use tempfile::{Builder as TempBuilder, TempDir};
 use url::Url;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct GitHubRepo {
     pub owner: String,
     pub name: String,

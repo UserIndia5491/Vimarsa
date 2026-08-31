@@ -100,12 +100,35 @@ async fn analyze_local_path(
 }
 
 #[tauri::command]
-async fn explain(app: AppHandle, state: State<'_, AppState>) -> Result<String, String> {
-    let api_key = std::env::var("GROQ_API_KEY").map_err(|_| {
-        "AI API key is not set. Create a `.env` file in the project root with \
-         GROQ_API_KEY=your-key (or export it in your shell) and restart Vimarśa."
-            .to_string()
-    })?;
+async fn explain(
+    api_key: Option<String>,
+    model: Option<String>,
+    app: AppHandle,
+    state: State<'_, AppState>,
+) -> Result<String, String> {
+    // 1) prefer key passed from UI (localStorage), 2) fallback to env var for dev/backwards compat
+    let api_key = api_key
+        .as_deref()
+        .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_string())
+        .or_else(|| std::env::var("GROQ_API_KEY").ok().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()))
+        .ok_or_else(|| {
+            "AI API key is not set. Paste your Groq API key in the box above (get one at https://console.groq.com). No .env file needed."
+                .to_string()
+        })?;
+
+    let model_override = model
+        .as_deref()
+        .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_string())
+        .or_else(|| {
+            std::env::var("GROQ_MODEL")
+                .ok()
+                .map(|s| s.trim().to_string())
+                .filter(|s| !s.is_empty())
+        });
 
     let report = state
         .last_report
@@ -126,7 +149,7 @@ async fn explain(app: AppHandle, state: State<'_, AppState>) -> Result<String, S
         "Asking AI to interpret the scanner's facts …",
     );
 
-    match explain_repository(&api_key, &report).await {
+    match explain_repository(&api_key, model_override.as_deref(), &report).await {
         Ok(explanation) => {
             emit_progress(&app, "done", "Explanation ready.");
             Ok(explanation)

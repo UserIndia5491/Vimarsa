@@ -21,17 +21,20 @@ npm install
 
 ## Groq setup (optional, for the AI explanation)
 
-1. Create an API key at <https://console.groq.com>.
-2. Copy `.env.example` to `.env` in the project root:
+**End users — no terminal or `.env` file needed:**
 
-   ```bash
-   cp .env.example .env
-   ```
+1. Open Vimarśa and go to the **Explanation** tab.
+2. Paste your Groq API key in the **Groq API Key** box and click **Save** (get a key at https://console.groq.com/keys).
+3. Click **Generate Explanation**. The key is saved locally in the app and never committed anywhere.
 
-3. Set `GROQ_API_KEY=your-key` in `.env` (or export it in your shell).
-4. Optionally set `GROQ_MODEL` to override the default model (`openai/gpt-oss-120b`).
+**Developers — optional `.env` fallback for `cargo run`:**
 
-Restart the app after changing the key. The key is read from the environment at runtime and is never stored by Vimarśa.
+```bash
+cp .env.example .env   # then set GROQ_API_KEY inside, or export it in your shell
+# optionally set GROQ_MODEL to override the default (openai/gpt-oss-120b)
+```
+
+The app prefers the key saved in the UI; `.env` / environment is only used as a fallback during local development.
 
 ## Development
 

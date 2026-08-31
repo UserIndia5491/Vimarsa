@@ -818,6 +818,213 @@ input {
   font-size: 12px;
 }
 
+/* ---------- api key ---------- */
+.apiKeyCard {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.apiKeyHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.apiKeyIcon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--accentBg);
+  border: 1px solid rgba(155, 147, 255, 0.28);
+  color: var(--accent);
+  flex: none;
+}
+.apiKeyTitle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.apiKeyTitle b {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.apiKeyTitle span {
+  font-size: 10.5px;
+  color: var(--dim);
+  line-height: 1.35;
+}
+.apiKeyTitle a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-left: 6px;
+  font-weight: 600;
+}
+.apiKeyTitle a:hover {
+  text-decoration: underline;
+}
+.keyStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border2);
+  white-space: nowrap;
+  flex: none;
+}
+.keyStatus.ok {
+  background: rgba(85, 180, 110, 0.12);
+  border-color: rgba(85, 180, 110, 0.28);
+  color: #6fcf8a;
+}
+.keyStatus.missing {
+  background: rgba(209, 154, 102, 0.12);
+  border-color: rgba(209, 154, 102, 0.28);
+  color: var(--warn);
+}
+.keyStatus .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+.apiKeyRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.apiKeyInputWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #17181d;
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  overflow: hidden;
+  min-width: 0;
+}
+.apiKeyInputWrap:focus-within {
+  border-color: var(--accent);
+}
+.apiKeyInputWrap input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text);
+}
+.apiKeyInputWrap input::placeholder {
+  color: var(--faint);
+}
+.iconBtn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  background: transparent;
+  border: 0;
+  border-left: 1px solid var(--border2);
+  color: var(--faint);
+  cursor: pointer;
+}
+.iconBtn:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+.apiKeyMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.apiKeyModelRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--dim);
+}
+.apiKeyModelRow input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 7px;
+  background: #17181d;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text);
+  outline: none;
+}
+.apiKeyModelRow input:focus {
+  border-color: var(--accent);
+}
+.apiKeyModelRow .faint {
+  color: var(--faint);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.keySaveMsg {
+  font-size: 10.5px;
+  color: #6fcf8a;
+  line-height: 1.4;
+}
+.apiKeyHint {
+  font-size: 10px;
+  color: var(--faint);
+  line-height: 1.5;
+}
+.apiKeyHint code {
+  font-family: var(--mono);
+  background: #17181d;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 0 3px;
+  font-size: 9.5px;
+}
+.apiKeyWarn {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid rgba(209, 154, 102, 0.28);
+  border-radius: 7px;
+  background: rgba(209, 154, 102, 0.08);
+  color: #c9a87e;
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+.apiKeyWarn svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--warn);
+}
+.apiKeyWarn code {
+  font-family: var(--mono);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(209, 154, 102, 0.22);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
 /* ---------- explanation ---------- */
 .explainView {
   gap: 14px;

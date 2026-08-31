@@ -111,6 +111,7 @@ enum SendOutcome {
 
 pub async fn explain_repository(
     api_key: &str,
+    model_override: Option<&str>,
     report: &RepoReport,
 ) -> Result<String> {
     let api_key = api_key.trim();
@@ -119,8 +120,11 @@ pub async fn explain_repository(
         return Err(anyhow!("AI API key is empty."));
     }
 
-    let model = std::env::var("GROQ_MODEL")
-        .unwrap_or_else(|_| DEFAULT_MODEL.into());
+    let model = model_override
+        .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
+        .unwrap_or(DEFAULT_MODEL)
+        .to_string();
 
     let mut last_error = String::new();
 

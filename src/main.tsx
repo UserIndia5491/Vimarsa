@@ -11,20 +11,29 @@ import {
   ChevronDown,
   ChevronRight,
   Code2,
+  Eye,
+  EyeOff,
   FileCode2,
   Folder,
   FolderOpen,
   GitBranch,
+  KeyRound,
   Layers3,
   Network,
   Search,
+  Settings2,
   ShieldAlert,
   Sparkles,
+  Trash2,
   XCircle,
   type LucideIcon,
 } from 'lucide-react';
 import type { FileReport, ProgressEvent, Report, Tab } from './types';
 import './styles.css';
+
+const STORAGE_KEY = 'vimarsa_groq_api_key';
+const STORAGE_MODEL = 'vimarsa_groq_model';
+const DEFAULT_MODEL = 'openai/gpt-oss-120b';
 
 const bytes = (n: number) =>
   n < 1024
@@ -148,6 +157,7 @@ function buildTree(files: FileReport[]): TreeDir {
 function TreeView({
   node,
   depth,
+  prefix,
   collapsed,
   onToggle,
   selected,
@@ -155,6 +165,7 @@ function TreeView({
 }: {
   node: TreeDir;
   depth: number;
+  prefix: string;
   collapsed: Set<string>;
   onToggle: (path: string) => void;
   selected: FileReport | null;
@@ -170,15 +181,15 @@ function TreeView({
     <>
       {entries.map(([name, child]) => {
         if ('children' in child) {
-          const path = child.name;
-          const open = !collapsed.has(path);
+          const fullPath = prefix ? `${prefix}/${child.name}` : child.name;
+          const open = !collapsed.has(fullPath);
 
           return (
-            <div key={path}>
+            <div key={fullPath}>
               <button
                 className="treeRow"
                 style={{ paddingLeft: 8 + depth * 14 }}
-                onClick={() => onToggle(path)}
+                onClick={() => onToggle(fullPath)}
               >
                 {open ? (
                   <ChevronDown size={12} />
@@ -186,13 +197,14 @@ function TreeView({
                   <ChevronRight size={12} />
                 )}
                 <Folder size={13} className="treeIcon" />
-                <span>{path.split('/').pop()}</span>
+                <span>{child.name}</span>
               </button>
 
               {open && (
                 <TreeView
                   node={child}
                   depth={depth + 1}
+                  prefix={fullPath}
                   collapsed={collapsed}
                   onToggle={onToggle}
                   selected={selected}
@@ -226,15 +238,118 @@ function ExplanationView({
   aiExplanation,
   onExplain,
   onClear,
+  groqKey,
+  groqKeyInput,
+  onKeyInputChange,
+  onSaveKey,
+  onClearKey,
+  showKey,
+  onToggleShowKey,
+  groqModelInput,
+  onModelInputChange,
+  keySaveMsg,
 }: {
   aiBusy: boolean;
   aiError: string;
   aiExplanation: string;
   onExplain: () => void;
   onClear: () => void;
+  groqKey: string;
+  groqKeyInput: string;
+  onKeyInputChange: (v: string) => void;
+  onSaveKey: () => void;
+  onClearKey: () => void;
+  showKey: boolean;
+  onToggleShowKey: () => void;
+  groqModelInput: string;
+  onModelInputChange: (v: string) => void;
+  keySaveMsg: string;
 }) {
+  const hasKey = groqKey.trim().length > 0;
+  const inputHasKey = groqKeyInput.trim().length > 0;
+
   return (
     <section className="tabView explainView">
+      <div className="apiKeyCard">
+        <div className="apiKeyHead">
+          <span className="apiKeyIcon">
+            <KeyRound size={14} />
+          </span>
+          <div className="apiKeyTitle">
+            <b>Groq API Key</b>
+            <span>
+              No .env file needed — paste your key here. It stays in this app.
+              <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer">
+                Get a key at console.groq.com
+              </a>
+            </span>
+          </div>
+          <span className={`keyStatus ${hasKey ? 'ok' : 'missing'}`}>
+            <i className="dot" />
+            {hasKey ? 'Key saved' : 'No key'}
+          </span>
+        </div>
+
+        <div className="apiKeyRow">
+          <div className="apiKeyInputWrap">
+            <input
+              type={showKey ? 'text' : 'password'}
+              value={groqKeyInput}
+              onChange={(e) => onKeyInputChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') onSaveKey();
+              }}
+              placeholder="gsk_..."
+              spellCheck={false}
+              autoComplete="off"
+            />
+            <button
+              type="button"
+              className="iconBtn"
+              title={showKey ? 'Hide key' : 'Show key'}
+              onClick={onToggleShowKey}
+            >
+              {showKey ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
+          </div>
+          <button className="btn primary" onClick={onSaveKey} disabled={!inputHasKey}>
+            Save
+          </button>
+          <button className="btn" onClick={onClearKey} disabled={!hasKey && !inputHasKey} title="Remove saved key">
+            <Trash2 size={13} />
+            Clear
+          </button>
+        </div>
+
+        <div className="apiKeyMeta">
+          <div className="apiKeyModelRow">
+            <Settings2 size={11} />
+            <span>Model</span>
+            <input
+              value={groqModelInput}
+              onChange={(e) => onModelInputChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') onSaveKey();
+              }}
+              placeholder={DEFAULT_MODEL}
+              spellCheck={false}
+            />
+            <span className="faint">default: {DEFAULT_MODEL}</span>
+          </div>
+          {keySaveMsg && <span className="keySaveMsg">{keySaveMsg}</span>}
+          <span className="apiKeyHint">
+            Key is stored locally with <code>localStorage</code> and sent only to <code>api.groq.com</code> when you click Generate. Never committed to your repo.
+          </span>
+        </div>
+
+        {!hasKey && (
+          <div className="apiKeyWarn">
+            <AlertTriangle size={12} />
+            Add your Groq key above to enable AI explanations. Basic users don't need to create any <code>.env</code> file.
+          </div>
+        )}
+      </div>
+
       <div className="explainHeader">
         <div className="explainTitle">
           <span className="explainIcon">
@@ -254,7 +369,8 @@ function ExplanationView({
           <button
             className="btn primary"
             onClick={onExplain}
-            disabled={aiBusy}
+            disabled={aiBusy || !hasKey}
+            title={!hasKey ? 'Save your Groq API key first' : undefined}
           >
             <Sparkles size={13} />
             {aiBusy ? 'Thinking…' : 'Generate Explanation'}
@@ -582,10 +698,8 @@ function DepsView({ report }: { report: Report }) {
 }
 
 function FileDetailView({
-  report,
   selected,
 }: {
-  report: Report;
   selected: FileReport;
 }) {
   const metrics: [string, string | number][] = [
@@ -903,6 +1017,7 @@ function Sidebar({
               <TreeView
                 node={tree}
                 depth={0}
+                prefix=""
                 collapsed={collapsed}
                 onToggle={onToggleDir}
                 selected={selected}
@@ -928,6 +1043,66 @@ function App() {
   const [aiError, setAiError] = useState('');
   const [aiExplanation, setAiExplanation] = useState('');
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
+  // --- Groq key: stored in localStorage, no .env file needed for end users ---
+  const [groqKey, setGroqKey] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) ?? '';
+    } catch {
+      return '';
+    }
+  });
+  const [groqKeyInput, setGroqKeyInput] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) ?? '';
+    } catch {
+      return '';
+    }
+  });
+  const [groqModelInput, setGroqModelInput] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_MODEL) ?? DEFAULT_MODEL;
+    } catch {
+      return DEFAULT_MODEL;
+    }
+  });
+  const [showKey, setShowKey] = useState(false);
+  const [keySaveMsg, setKeySaveMsg] = useState('');
+
+  const handleSaveKey = () => {
+    const k = groqKeyInput.trim();
+    const m = groqModelInput.trim() || DEFAULT_MODEL;
+    if (!k) {
+      setKeySaveMsg('Paste a key first (starts with gsk_…).');
+      setTimeout(() => setKeySaveMsg(''), 2500);
+      return;
+    }
+    try {
+      localStorage.setItem(STORAGE_KEY, k);
+      localStorage.setItem(STORAGE_MODEL, m);
+    } catch {}
+    setGroqKey(k);
+    setKeySaveMsg('✓ Saved locally — key never leaves your machine except to call Groq.');
+    setTimeout(() => setKeySaveMsg(''), 3000);
+  };
+
+  const handleClearKey = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+    setGroqKey('');
+    setGroqKeyInput('');
+    setKeySaveMsg('Key cleared.');
+    setTimeout(() => setKeySaveMsg(''), 2000);
+    setAiError('');
+  };
+
+  // persist model whenever it changes (so user doesn't need to click Save for model-only changes)
+  useEffect(() => {
+    try {
+      const m = groqModelInput.trim() || DEFAULT_MODEL;
+      localStorage.setItem(STORAGE_MODEL, m);
+    } catch {}
+  }, [groqModelInput]);
 
   useEffect(() => {
     let unlisten: (() => void) | undefined;
@@ -1021,11 +1196,20 @@ function App() {
 
   async function explainWithGroq() {
     setAiError('');
+    if (!groqKey.trim()) {
+      setAiError(
+        'No Groq API key saved. Paste your key in the box above and click Save, then try again. Get a key at https://console.groq.com/keys',
+      );
+      return;
+    }
     setProgress(null);
     setAiBusy(true);
 
     try {
-      const result = await invoke<string>('explain');
+      const result = await invoke<string>('explain', {
+        api_key: groqKey.trim(),
+        model: groqModelInput.trim() || DEFAULT_MODEL,
+      });
       setAiExplanation(result);
     } catch (e) {
       setAiError(String(e));
@@ -1120,13 +1304,26 @@ function App() {
                   aiError={aiError}
                   aiExplanation={aiExplanation}
                   onExplain={explainWithGroq}
-                  onClear={() => setAiExplanation('')}
+                  onClear={() => {
+                    setAiExplanation('');
+                    setAiError('');
+                  }}
+                  groqKey={groqKey}
+                  groqKeyInput={groqKeyInput}
+                  onKeyInputChange={setGroqKeyInput}
+                  onSaveKey={handleSaveKey}
+                  onClearKey={handleClearKey}
+                  showKey={showKey}
+                  onToggleShowKey={() => setShowKey((v) => !v)}
+                  groqModelInput={groqModelInput}
+                  onModelInputChange={setGroqModelInput}
+                  keySaveMsg={keySaveMsg}
                 />
               )}
 
               {tab === 'files' &&
                 (selected ? (
-                  <FileDetailView report={report} selected={selected} />
+                  <FileDetailView selected={selected} />
                 ) : (
                   <div className="emptyPanel">
                     Select a file in the sidebar.
