@@ -119,17 +119,22 @@ That is intentional. We would rather show you less but be accurate, than show yo
 
 We also deliberately do not explain our internal scanning process in detail. Not because it is magic, but because we want you to focus on your repository, not on ours. Use the tool, trust what you can see and verify in the tabs, and let the rest stay simple.
 
-## Where the Code Lives
+## Where to Find What
 
-This GitHub repository (`Vimarsa`) is the home for the story, the documentation, and the downloads.
+This repository — **Vimarsa** — is public and is the place to *use* Vimarśa. You will find the story, the documentation, and all the official downloads right here under **Releases** on this page.
 
-The active codebase and all releases are maintained at **VimarsaCode**: https://github.com/UserIndia5491/VimarsaCode — that is where you will find installers for Windows and Linux (AppImage, deb, rpm) and the full version history.
+The source code itself lives separately in **VimarsaCode** (`https://github.com/UserIndia5491/VimarsaCode`), which is a private repository used only for development and version history. You do not need access to it to use the app. Everything you need as a user — installers for Windows and Linux (AppImage, deb, rpm), the zip bundle, checksums, and release notes — is published here in this public repo.
 
-If you are here to use the app, you want VimarsaCode for downloads. If you are here to understand what Vimarśa is about, you are in the right place.
+In short:
+- **Want to download and use Vimarśa? Stay here in `Vimarsa` → Releases.**
+- **Are you a maintainer? The code is in `VimarsaCode` (private).**
 
 ## Getting Started in 2 Minutes
 
-1. Visit **https://github.com/UserIndia5491/VimarsaCode** and download the installer for your system from the latest release.
+1. Go to **Releases** on this page (`https://github.com/UserIndia5491/Vimarsa/releases`) and download the file for your system:
+   - **Windows:** `Vimarsa_1.0.0_x64-setup.exe` (installer) or `vimarsa_1.0.0_windows_x64.exe` + `WebView2Loader.dll` (portable) or the `.zip`
+   - **Linux:** `Vimarsa_1.0.0_amd64.AppImage` (portable, just `chmod +x` and run), or `vimarsa_1.0.0_amd64.deb` for Debian/Ubuntu/Mint, or `vimarsa-1.0.0-1.x86_64.rpm` for Fedora
+   - Verify with `SHA256SUMS` if you like
 2. Install and open Vimarśa.
 3. Paste any public GitHub URL, or click “Open Local Folder” and choose a project from your disk.
 4. Skim the Overview, then Files, then Dependencies.
@@ -155,7 +160,7 @@ That is it. No accounts, no setup scripts, no prior knowledge required.
 
 Vimarśa was made to make reading code feel less lonely. If it helped you, if something confused you, or if there is a repository type where you wish it showed more — we would love to hear about it.
 
-Open an issue or a discussion in **VimarsaCode**, or just share a screenshot of the Overview with your thoughts. Real stories from real repositories are the best way for us to make the next version more helpful.
+Open an issue or a discussion right here in **Vimarsa** (this public repo), or just share a screenshot of the Overview with your thoughts. Real stories from real repositories are the best way for us to make the next version more helpful. (The code history in `VimarsaCode` is private, so all user feedback lives here where the community can see it.)
 
 Thank you for reading. We hope Vimarśa helps you spend less time *finding* your way around code, and more time *creating* something meaningful with it.
 
