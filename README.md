@@ -160,7 +160,7 @@ That is it. No accounts, no setup scripts, no prior knowledge required.
 
 Vimarśa was made to make reading code feel less lonely. If it helped you, if something confused you, or if there is a repository type where you wish it showed more — we would love to hear about it.
 
-Open an issue or a discussion right here in **Vimarsa** (this public repo), or just share a screenshot of the Overview with your thoughts. Real stories from real repositories are the best way for us to make the next version more helpful. (The code history in `VimarsaCode` is private, so all user feedback lives here where the community can see it.)
+Open an issue or a discussion right here in **Vimarsa** (this public repo), or just share a screenshot of the Overview with your thoughts. Real stories from real repositories are the best way for us to make the next version more helpful. 
 
 Thank you for reading. We hope Vimarśa helps you spend less time *finding* your way around code, and more time *creating* something meaningful with it.
 
